@@ -1,6 +1,7 @@
 package processors
 
 import (
+	"strings"
 	"github.com/cloudfoundry/sonde-go/events"
 	"github.com/pivotal-cf/graphite-nozzle/metrics"
 )
@@ -22,7 +23,7 @@ func (p *ValueMetricProcessor) Process(e *events.Envelope) ([]metrics.Metric, er
 
 func (p *ValueMetricProcessor) ProcessValueMetric(event *events.ValueMetric, origin string) *metrics.FGaugeMetric {
 	statPrefix := "ops." + origin + "."
-	valueMetricName := event.GetName()
+	valueMetricName := strings.Replace(event.GetName(), ".", "_", -1)
 	stat := statPrefix + valueMetricName
 	metric := metrics.NewFGaugeMetric(stat, event.GetValue())
 
