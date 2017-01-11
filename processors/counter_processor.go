@@ -1,6 +1,7 @@
 package processors
 
 import (
+	"strings"
 	"github.com/cloudfoundry/sonde-go/events"
 	"github.com/pivotal-cf/graphite-nozzle/metrics"
 )
@@ -21,7 +22,7 @@ func (p *CounterProcessor) Process(e *events.Envelope) ([]metrics.Metric, error)
 }
 
 func (p *CounterProcessor) ProcessCounter(event *events.CounterEvent) *metrics.CounterMetric {
-	stat := "ops." + event.GetName()
+	stat := "ops." + strings.Replace(event.GetName(), ".", "_", -1)
 	metric := metrics.NewCounterMetric(stat, int64(event.GetDelta()))
 
 	return metric
